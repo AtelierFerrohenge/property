@@ -49,4 +49,16 @@ TypedArray<PropertyUsageFlags> PropertyDef::get_usage() const {
 }
 
 void PropertyDef::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
+    ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
+    ClassDB::bind_method(D_METHOD("set_class_name", "class_name"), &PropertyDef::set_class_name);
+    ClassDB::bind_method(D_METHOD("get_class_name"), &PropertyDef::get_class_name);
+    ClassDB::bind_method(D_METHOD("set_type", "type"), &PropertyDef::set_type);
+    ClassDB::bind_method(D_METHOD("get_type"), &PropertyDef::get_type);
+    ClassDB::bind_method(D_METHOD("set_hint", "hint"), &PropertyDef::set_hint);
+    ClassDB::bind_method(D_METHOD("get_hint"), &PropertyDef::get_hint);
+    ClassDB::bind_method(D_METHOD("set_hint_string", "hint_string"), &PropertyDef::set_hint_string);
+    ClassDB::bind_method(D_METHOD("get_hint_string"), &PropertyDef::get_hint_string);
+    ClassDB::bind_method(D_METHOD("set_usage", "usage"), &PropertyDef::set_usage);
+    ClassDB::bind_method(D_METHOD("get_usage"), &PropertyDef::get_usage);
 }
