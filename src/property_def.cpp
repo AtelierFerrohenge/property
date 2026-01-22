@@ -40,13 +40,14 @@ String PropertyDef::get_hint_string() const {
     return hint_string;
 }
 
-void PropertyDef::set_usage(TypedArray<PropertyUsageFlags> p_usage) {
+// Figure out how to properly create an array of enums
+/* void PropertyDef::set_usage(TypedArray<PropertyUsageFlags> p_usage) {
     usage = p_usage;
 }
 
 TypedArray<PropertyUsageFlags> PropertyDef::get_usage() const {
     return usage;
-}
+} */
 
 void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
@@ -59,8 +60,9 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_hint"), &PropertyDef::get_hint);
     ClassDB::bind_method(D_METHOD("set_hint_string", "hint_string"), &PropertyDef::set_hint_string);
     ClassDB::bind_method(D_METHOD("get_hint_string"), &PropertyDef::get_hint_string);
-    ClassDB::bind_method(D_METHOD("set_usage", "usage"), &PropertyDef::set_usage);
-    ClassDB::bind_method(D_METHOD("get_usage"), &PropertyDef::get_usage);
+    // Figure out how to properly create an array of enums
+    //ClassDB::bind_method(D_METHOD("set_usage", "usage"), &PropertyDef::set_usage);
+    //ClassDB::bind_method(D_METHOD("get_usage"), &PropertyDef::get_usage);
 
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name"), "set_name", "get_name");
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "class_name"), "set_class_name", "get_class_name");
@@ -70,6 +72,7 @@ void PropertyDef::_bind_methods() {
     // Same as above
     ADD_PROPERTY(PropertyInfo(Variant::INT, "hint"), "set_hint", "get_hint");
     ADD_PROPERTY(PropertyInfo(Variant::STRING, "hint_string"), "set_hint_string", "get_hint_string");
-    // Review if I can even use an enum as an array type
-    ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "usage", PROPERTY_HINT_ARRAY_TYPE, "PropertyUsageFlags"), "set_usage", "get_usage");
+    // Figure out how to properly create an array of enums
+    // Determine if I can remove duplicates too
+    //ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "usage"), "set_usage", "get_usage");
 }
