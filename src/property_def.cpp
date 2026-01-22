@@ -61,4 +61,15 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_hint_string"), &PropertyDef::get_hint_string);
     ClassDB::bind_method(D_METHOD("set_usage", "usage"), &PropertyDef::set_usage);
     ClassDB::bind_method(D_METHOD("get_usage"), &PropertyDef::get_usage);
+
+    ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name"), "set_name", "get_name");
+    ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "class_name"), "set_class_name", "get_class_name");
+    // Turn this into an enum with every member of Variant::Type, limited by a virtual method
+    // May need _get_property_list, may not if I can find a way with statics
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "type"), "set_type", "get_type");
+    // Same as above
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "hint"), "set_hint", "get_hint");
+    ADD_PROPERTY(PropertyInfo(Variant::STRING, "hint_string"), "set_hint_string", "get_hint_string");
+    // Review if I can even use an enum as an array type
+    ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "usage", PROPERTY_HINT_ARRAY_TYPE, "PropertyUsageFlags"), "set_usage", "get_usage");
 }
