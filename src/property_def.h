@@ -20,18 +20,19 @@ public:
     StringName get_class_name() const;
     void set_hint_string(String p_hint_string);
     String get_hint_string() const;
-    // Review if this should be a reference
-    void set_usage(TypedArray<int> p_usage);
-    TypedArray<int> get_usage() const;
 
     void set_type(Variant::Type p_type);
     Variant::Type get_type() const;
     void set_hint(PropertyHint p_hint);
     PropertyHint get_hint() const;
+    // Review if this should be a reference
+    void set_usage(TypedArray<int> p_usage);
+    TypedArray<int> get_usage() const;
 
     // Maybe could be PackedStringArrays?
     virtual TypedArray<String> get_valid_types() const;
     virtual TypedArray<String> get_valid_hints() const;
+    virtual TypedArray<String> get_valid_usage_flags() const;
 
 protected:
     static void _bind_methods();
@@ -42,15 +43,16 @@ protected:
 
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_types)
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_hints)
+    GDVIRTUAL0RC(TypedArray<String>, _get_valid_usage_flags)
 
 private:
     StringName name;
     StringName class_name;
-    Variant::Type type;
-    PropertyHint hint;
+    Variant::Type type = Variant::NIL;
+    PropertyHint hint = PROPERTY_HINT_NONE;
     String hint_string;
     // Review if this should be a type of Vector instead
-    TypedArray<int> usage;
+    TypedArray<int> usage = {PROPERTY_USAGE_DEFAULT};
 
     // Maybe should be static
     // Might need to take reference too
