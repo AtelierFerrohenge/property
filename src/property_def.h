@@ -23,9 +23,8 @@ public:
     void set_hint_string(String p_hint_string);
     String get_hint_string() const;
     // Review if this should be a reference
-    // Figure out how to properly create an array of enums
-    //void set_usage(TypedArray<PropertyUsageFlags> p_usage);
-    //TypedArray<PropertyUsageFlags> get_usage() const;
+    void set_usage(TypedArray<int> p_usage);
+    TypedArray<int> get_usage() const;
 
 protected:
     static void _bind_methods();
@@ -37,6 +36,5 @@ private:
     PropertyHint hint;
     String hint_string;
     // Review if this should be a type of Vector instead
-    // Figure out how to properly create an array of enums
-    //TypedArray<PropertyUsageFlags> usage;
+    TypedArray<int> usage;
 };
