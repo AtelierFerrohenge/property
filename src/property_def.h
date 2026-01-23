@@ -16,8 +16,6 @@ public:
     // Review if this should be a reference
     void set_name(StringName p_name);
     StringName get_name() const;
-    void set_hint_string(String p_hint_string);
-    String get_hint_string() const;
 
     void set_class_name(StringName p_class_name);
     StringName get_class_name() const;
@@ -25,6 +23,8 @@ public:
     Variant::Type get_type() const;
     void set_hint(PropertyHint p_hint);
     PropertyHint get_hint() const;
+    void set_hint_string(String p_hint_string);
+    String get_hint_string() const;
     // Review if this should be a reference
     void set_usage(TypedArray<int> p_usage);
     TypedArray<int> get_usage() const;

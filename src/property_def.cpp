@@ -8,14 +8,6 @@ StringName PropertyDef::get_name() const {
     return name;
 }
 
-void PropertyDef::set_hint_string(String p_hint_string) {
-    hint_string = p_hint_string;
-}
-
-String PropertyDef::get_hint_string() const {
-    return hint_string;
-}
-
 void PropertyDef::set_class_name(StringName p_class_name) {
     class_name = p_class_name;
 }
@@ -36,10 +28,20 @@ Variant::Type PropertyDef::get_type() const {
 
 void PropertyDef::set_hint(PropertyHint p_hint) {
     hint = p_hint;
+    // Limit to changes to and away from PROPERTY_HINT_NONE and other stringless hints
+    notify_property_list_changed();
 }
 
 PropertyHint PropertyDef::get_hint() const {
     return hint;
+}
+
+void PropertyDef::set_hint_string(String p_hint_string) {
+    hint_string = p_hint_string;
+}
+
+String PropertyDef::get_hint_string() const {
+    return hint_string;
 }
 
 void PropertyDef::set_usage(TypedArray<int> p_usage) {
@@ -87,8 +89,6 @@ TypedArray<String> PropertyDef::get_valid_usage_flags() const {
 void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
-    ClassDB::bind_method(D_METHOD("set_hint_string", "hint_string"), &PropertyDef::set_hint_string);
-    ClassDB::bind_method(D_METHOD("get_hint_string"), &PropertyDef::get_hint_string);
 
     GDVIRTUAL_BIND(_get_valid_class_names);
     GDVIRTUAL_BIND(_get_valid_types);
@@ -96,7 +96,6 @@ void PropertyDef::_bind_methods() {
     GDVIRTUAL_BIND(_get_valid_usage_flags);
 
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name"), "set_name", "get_name");
-    ADD_PROPERTY(PropertyInfo(Variant::STRING, "hint_string"), "set_hint_string", "get_hint_string");
 }
 
 bool PropertyDef::_set(const StringName &p_name, const Variant &p_value) {
@@ -111,6 +110,12 @@ bool PropertyDef::_set(const StringName &p_name, const Variant &p_value) {
         set_type(static_cast<Variant::Type>(static_cast<int>(p_value)));
     } else if(p_name == StringName("hint")) {
         set_hint(static_cast<PropertyHint>(static_cast<int>(p_value)));
+    } else if(p_name == StringName("hint_string")) {
+        // Review if I should return false or not
+        if(hint == PROPERTY_HINT_NONE) {
+            return false;
+        }
+        set_hint_string(p_value);
     } else if(p_name == StringName("usage")) {
         set_usage(p_value);
     } else {
@@ -131,6 +136,12 @@ bool PropertyDef::_get(const StringName &p_name, Variant &r_ret) const {
         r_ret = get_type();
     } else if(p_name == StringName("hint")) {
         r_ret = get_hint();
+    } else if(p_name == StringName("hint_string")) {
+        // Review if I should return false or not
+        if(hint == PROPERTY_HINT_NONE) {
+            return false;
+        }
+        r_ret = get_hint_string();
     } else if(p_name == StringName("usage")) {
         r_ret = get_usage();
     } else {
@@ -146,6 +157,9 @@ void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
     }
     p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_types())));
     p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_hints())));
+    if(hint != PROPERTY_HINT_NONE) {
+        p_list->push_back(PropertyInfo(Variant::STRING, "hint_string"));
+    }
     // Determine if I can remove duplicates too
     p_list->push_back(PropertyInfo(Variant::ARRAY, "usage", PROPERTY_HINT_ARRAY_TYPE, vformat("%s/%s:%s", Variant::INT, PROPERTY_HINT_ENUM, get_enum_hint(get_valid_usage_flags()))));
 }
