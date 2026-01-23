@@ -2,6 +2,8 @@
 
 #include "godot_cpp/classes/resource.hpp"
 
+#include <godot_cpp/core/gdvirtual.gen.inc>
+
 using namespace godot;
 
 class PropertyDef : public Resource {
@@ -26,8 +28,12 @@ public:
     void set_usage(TypedArray<int> p_usage);
     TypedArray<int> get_usage() const;
 
+    virtual TypedArray<String> get_valid_types() const;
+
 protected:
     static void _bind_methods();
+
+    GDVIRTUAL0RC(TypedArray<String>, _get_valid_types)
 
 private:
     StringName name;

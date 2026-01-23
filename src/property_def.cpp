@@ -48,6 +48,15 @@ TypedArray<int> PropertyDef::get_usage() const {
     return usage;
 }
 
+TypedArray<String> PropertyDef::get_valid_types() const {
+    TypedArray<String> ret;
+    if(GDVIRTUAL_CALL(_get_valid_types, ret)) {
+        return ret;
+    }
+    ret.push_back("Nil:0");
+    return ret;
+}
+
 void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
@@ -61,6 +70,8 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_hint_string"), &PropertyDef::get_hint_string);
     ClassDB::bind_method(D_METHOD("set_usage", "usage"), &PropertyDef::set_usage);
     ClassDB::bind_method(D_METHOD("get_usage"), &PropertyDef::get_usage);
+
+    GDVIRTUAL_BIND(_get_valid_types);
 
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name"), "set_name", "get_name");
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "class_name"), "set_class_name", "get_class_name");
