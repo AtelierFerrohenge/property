@@ -29,6 +29,8 @@ public:
     void set_usage(TypedArray<int> p_usage);
     TypedArray<int> get_usage() const;
 
+    Dictionary get_dictionary() const;
+
     // Maybe could be PackedStringArrays?
     virtual TypedArray<String> get_valid_class_names() const;
     virtual TypedArray<String> get_valid_types() const;

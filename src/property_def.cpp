@@ -52,6 +52,23 @@ TypedArray<int> PropertyDef::get_usage() const {
     return usage;
 }
 
+Dictionary PropertyDef::get_dictionary() const {
+    // Review if there's a way to do this with "{}"
+    Dictionary result;
+    result["name"] = name;
+    result["class_name"] = class_name;
+    result["type"] = type;
+    result["hint"] = hint;
+    result["hint_string"] = hint_string;
+    // Review this
+    int usage_value = 0;
+    for(int flag : usage) {
+        usage_value |= flag;
+    }
+    result["usage"] = usage_value;
+    return result;
+}
+
 TypedArray<String> PropertyDef::get_valid_class_names() const {
     TypedArray<String> ret;
     GDVIRTUAL_CALL(_get_valid_class_names, ret);
@@ -89,6 +106,8 @@ TypedArray<String> PropertyDef::get_valid_usage_flags() const {
 void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
+
+    ClassDB::bind_method(D_METHOD("get_dictionary"), &PropertyDef::get_dictionary);
 
     GDVIRTUAL_BIND(_get_valid_class_names);
     GDVIRTUAL_BIND(_get_valid_types);
