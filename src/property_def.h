@@ -18,8 +18,6 @@ public:
     StringName get_name() const;
     void set_class_name(StringName p_class_name);
     StringName get_class_name() const;
-    void set_type(Variant::Type p_type);
-    Variant::Type get_type() const;
     void set_hint(PropertyHint p_hint);
     PropertyHint get_hint() const;
     void set_hint_string(String p_hint_string);
@@ -28,10 +26,18 @@ public:
     void set_usage(TypedArray<int> p_usage);
     TypedArray<int> get_usage() const;
 
+    void set_type(Variant::Type p_type);
+    Variant::Type get_type() const;
+
+    // Maybe could be PackedStringArray?
     virtual TypedArray<String> get_valid_types() const;
 
 protected:
     static void _bind_methods();
+
+    bool _set(const StringName &p_name, const Variant &p_value);
+    bool _get(const StringName &p_name, Variant &r_ret) const;
+    void _get_property_list(List<PropertyInfo> *p_list) const;
 
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_types)
 
@@ -43,4 +49,8 @@ private:
     String hint_string;
     // Review if this should be a type of Vector instead
     TypedArray<int> usage;
+
+    // Maybe should be static
+    // Might need to take reference too
+    String get_enum_hint(TypedArray<String> options) const;
 };

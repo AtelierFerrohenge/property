@@ -16,14 +16,6 @@ StringName PropertyDef::get_class_name() const {
     return class_name;
 }
 
-void PropertyDef::set_type(Variant::Type p_type) {
-    type = p_type;
-}
-
-Variant::Type PropertyDef::get_type() const {
-    return type;
-}
-
 void PropertyDef::set_hint(PropertyHint p_hint) {
     hint = p_hint;
 }
@@ -48,6 +40,14 @@ TypedArray<int> PropertyDef::get_usage() const {
     return usage;
 }
 
+void PropertyDef::set_type(Variant::Type p_type) {
+    type = p_type;
+}
+
+Variant::Type PropertyDef::get_type() const {
+    return type;
+}
+
 TypedArray<String> PropertyDef::get_valid_types() const {
     TypedArray<String> ret;
     if(GDVIRTUAL_CALL(_get_valid_types, ret)) {
@@ -62,8 +62,6 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
     ClassDB::bind_method(D_METHOD("set_class_name", "class_name"), &PropertyDef::set_class_name);
     ClassDB::bind_method(D_METHOD("get_class_name"), &PropertyDef::get_class_name);
-    ClassDB::bind_method(D_METHOD("set_type", "type"), &PropertyDef::set_type);
-    ClassDB::bind_method(D_METHOD("get_type"), &PropertyDef::get_type);
     ClassDB::bind_method(D_METHOD("set_hint", "hint"), &PropertyDef::set_hint);
     ClassDB::bind_method(D_METHOD("get_hint"), &PropertyDef::get_hint);
     ClassDB::bind_method(D_METHOD("set_hint_string", "hint_string"), &PropertyDef::set_hint_string);
@@ -83,4 +81,30 @@ void PropertyDef::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::STRING, "hint_string"), "set_hint_string", "get_hint_string");
     // Determine if I can remove duplicates too
     ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "usage", PROPERTY_HINT_ARRAY_TYPE, vformat("%s/%s:%s", Variant::INT, PROPERTY_HINT_ENUM, "To,Do,Later")), "set_usage", "get_usage");
+}
+
+bool PropertyDef::_set(const StringName &p_name, const Variant &p_value) {
+    if(p_name == StringName("type")) {
+        set_type(static_cast<Variant::Type>(static_cast<int>(p_value)));
+    } else {
+        return false;
+    }
+    return true;
+}
+
+bool PropertyDef::_get(const StringName &p_name, Variant &r_ret) const {
+    if(p_name == StringName("type")) {
+        r_ret = get_type();
+    } else {
+        return false;
+    }
+    return true;
+}
+
+void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
+    p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_types())));
+}
+
+String PropertyDef::get_enum_hint(TypedArray<String> options) const {
+    return String(",").join(options);
 }
