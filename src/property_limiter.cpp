@@ -1,5 +1,6 @@
 #include "property_limiter.h"
 
+// Doesn't seem to update parent resources, figure out how to
 void PropertyLimiter::set_valid_hints(int p_valid_hints) {
     valid_hints = p_valid_hints;
 }
@@ -9,7 +10,21 @@ int PropertyLimiter::get_valid_hints() const {
 }
 
 String PropertyLimiter::get_hints_enum_hint() const {
-    return "To Do";
+    // Use a reference if possible
+    PackedStringArray values = get_hint_defs();
+    PackedStringArray result = {"None:0"};
+    // Guard against invalid values for valid_hints
+    int flags = valid_hints;
+    int index = 0;
+    while(flags != 0) {
+        int bit = 1 << index;
+        if(flags & bit) {
+            result.push_back(values[index]);
+            flags &= ~bit;
+        }
+        ++index;
+    }
+    return String(",").join(result);
 }
 
 void PropertyLimiter::_bind_methods() {
@@ -29,8 +44,8 @@ String PropertyLimiter::get_hints_flags_hint() {
 
 // See if I can use constant references here instead
 PackedStringArray PropertyLimiter::get_hint_defs() {
+    // Overflows due to int size - need to split
     return {
-        "None:0",
         "Range:1",
         "Enum:2",
         "Enum Suggestion:3",

@@ -2,6 +2,7 @@
 
 void PropertyDef::set_limiter(const Ref<PropertyLimiter> &p_limiter) {
     limiter = p_limiter;
+    notify_property_list_changed();
 }
 
 Ref<PropertyLimiter> PropertyDef::get_limiter() const {
@@ -178,7 +179,10 @@ void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
         p_list->push_back(PropertyInfo(Variant::STRING_NAME, "class_name", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_class_names())));
     }
     p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_types())));
-    p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, "To Do"));
+    // Probably also disable get set if limiter isn't valid
+    if(limiter.is_valid()) {
+        p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, limiter->get_hints_enum_hint()));
+    }
     if(hint != PROPERTY_HINT_NONE) {
         p_list->push_back(PropertyInfo(Variant::STRING, "hint_string"));
     }
