@@ -1,5 +1,13 @@
 #include "property_def.h"
 
+void PropertyDef::set_limiter(const Ref<PropertyLimiter> &p_limiter) {
+    limiter = p_limiter;
+}
+
+Ref<PropertyLimiter> PropertyDef::get_limiter() const {
+    return limiter;
+}
+
 void PropertyDef::set_name(StringName p_name) {
     name = p_name;
 }
@@ -84,15 +92,6 @@ TypedArray<String> PropertyDef::get_valid_types() const {
     return ret;
 }
 
-TypedArray<String> PropertyDef::get_valid_hints() const {
-    TypedArray<String> ret;
-    if(GDVIRTUAL_CALL(_get_valid_hints, ret)) {
-        return ret;
-    }
-    ret.push_back("None:0");
-    return ret;
-}
-
 TypedArray<String> PropertyDef::get_valid_usage_flags() const {
     TypedArray<String> ret;
     if(GDVIRTUAL_CALL(_get_valid_usage_flags, ret)) {
@@ -104,6 +103,9 @@ TypedArray<String> PropertyDef::get_valid_usage_flags() const {
 }
 
 void PropertyDef::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("set_limiter", "limiter"), &PropertyDef::set_limiter);
+    ClassDB::bind_method(D_METHOD("get_limiter"), &PropertyDef::get_limiter);
+
     ClassDB::bind_method(D_METHOD("set_name", "name"), &PropertyDef::set_name);
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
 
@@ -111,8 +113,9 @@ void PropertyDef::_bind_methods() {
 
     GDVIRTUAL_BIND(_get_valid_class_names);
     GDVIRTUAL_BIND(_get_valid_types);
-    GDVIRTUAL_BIND(_get_valid_hints);
     GDVIRTUAL_BIND(_get_valid_usage_flags);
+
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "limiter", PROPERTY_HINT_RESOURCE_TYPE, "PropertyLimiter"), "set_limiter", "get_limiter");
 
     ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "name"), "set_name", "get_name");
 }
@@ -175,7 +178,7 @@ void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
         p_list->push_back(PropertyInfo(Variant::STRING_NAME, "class_name", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_class_names())));
     }
     p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_types())));
-    p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_hints())));
+    p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, "To Do"));
     if(hint != PROPERTY_HINT_NONE) {
         p_list->push_back(PropertyInfo(Variant::STRING, "hint_string"));
     }

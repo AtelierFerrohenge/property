@@ -4,6 +4,8 @@
 
 #include <godot_cpp/core/gdvirtual.gen.inc>
 
+#include "property_limiter.h"
+
 using namespace godot;
 
 class PropertyDef : public Resource {
@@ -12,6 +14,9 @@ class PropertyDef : public Resource {
 public:
     PropertyDef() = default;
     ~PropertyDef() override = default;
+
+    void set_limiter(const Ref<PropertyLimiter> &p_limiter);
+    Ref<PropertyLimiter> get_limiter() const;
 
     // Review if this should be a reference
     void set_name(StringName p_name);
@@ -34,7 +39,6 @@ public:
     // Maybe could be PackedStringArrays?
     virtual TypedArray<String> get_valid_class_names() const;
     virtual TypedArray<String> get_valid_types() const;
-    virtual TypedArray<String> get_valid_hints() const;
     virtual TypedArray<String> get_valid_usage_flags() const;
 
 protected:
@@ -46,10 +50,11 @@ protected:
 
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_class_names)
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_types)
-    GDVIRTUAL0RC(TypedArray<String>, _get_valid_hints)
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_usage_flags)
 
 private:
+    Ref<PropertyLimiter> limiter;
+
     StringName name;
     StringName class_name;
     Variant::Type type = Variant::NIL;
