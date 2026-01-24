@@ -84,15 +84,6 @@ TypedArray<String> PropertyDef::get_valid_class_names() const {
     return ret;
 }
 
-TypedArray<String> PropertyDef::get_valid_types() const {
-    TypedArray<String> ret;
-    if(GDVIRTUAL_CALL(_get_valid_types, ret)) {
-        return ret;
-    }
-    ret.push_back("Nil:0");
-    return ret;
-}
-
 TypedArray<String> PropertyDef::get_valid_usage_flags() const {
     TypedArray<String> ret;
     if(GDVIRTUAL_CALL(_get_valid_usage_flags, ret)) {
@@ -113,7 +104,6 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_dictionary"), &PropertyDef::get_dictionary);
 
     GDVIRTUAL_BIND(_get_valid_class_names);
-    GDVIRTUAL_BIND(_get_valid_types);
     GDVIRTUAL_BIND(_get_valid_usage_flags);
 
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "limiter", PROPERTY_HINT_RESOURCE_TYPE, "PropertyLimiter"), "set_limiter", "get_limiter");
@@ -178,11 +168,12 @@ void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
     if(type == Variant::OBJECT) {
         p_list->push_back(PropertyInfo(Variant::STRING_NAME, "class_name", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_class_names())));
     }
-    p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_types())));
     // Probably also disable get set if limiter isn't valid
     if(limiter.is_valid()) {
+        p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, limiter->get_types_enum_hint()));
         p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, limiter->get_hints_enum_hint()));
     }
+    // Will want to reveal or hide hint string field depending limiter flags usage
     if(hint != PROPERTY_HINT_NONE) {
         p_list->push_back(PropertyInfo(Variant::STRING, "hint_string"));
     }

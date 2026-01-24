@@ -38,7 +38,6 @@ public:
 
     // Maybe could be PackedStringArrays?
     virtual TypedArray<String> get_valid_class_names() const;
-    virtual TypedArray<String> get_valid_types() const;
     virtual TypedArray<String> get_valid_usage_flags() const;
 
 protected:
@@ -49,7 +48,6 @@ protected:
     void _get_property_list(List<PropertyInfo> *p_list) const;
 
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_class_names)
-    GDVIRTUAL0RC(TypedArray<String>, _get_valid_types)
     GDVIRTUAL0RC(TypedArray<String>, _get_valid_usage_flags)
 
 private:
