@@ -36,6 +36,15 @@ int PropertyLimiter::get_valid_standalone_hints() const {
     return valid_standalone_hints;
 }
 
+// Doesn't seem to update parent resources, figure out how to
+void PropertyLimiter::set_valid_usages(int p_usages) {
+    valid_usages = p_usages;
+}
+
+int PropertyLimiter::get_valid_usages() const {
+    return valid_usages;
+}
+
 // Clean this code later - definitely make a helper function
 // Maybe bind too
 String PropertyLimiter::get_types_enum_hint() const {
@@ -99,6 +108,27 @@ String PropertyLimiter::get_hints_enum_hint() const {
     return String(",").join(result);
 }
 
+// Clean this code later - definitely make a helper function
+// Maybe bind too
+String PropertyLimiter::get_usages_flags_hint() const {
+    // Use a reference if possible
+    PackedStringArray values = get_usage_defs();
+    // Perhaps need defaults, like None and Default
+    PackedStringArray result = {"None:0", "Default:6"};
+    // Guard against invalid values for valid hints
+    int flags = valid_usages;
+    int index = 0;
+    while(flags != 0) {
+        int bit = 1 << index;
+        if(flags & bit) {
+            result.push_back(values[index]);
+            flags &= ~bit;
+        }
+        ++index;
+    }
+    return String(",").join(result);
+}
+
 void PropertyLimiter::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_valid_value_types", "types"), &PropertyLimiter::set_valid_value_types);
     ClassDB::bind_method(D_METHOD("get_valid_value_types"), &PropertyLimiter::get_valid_value_types);
@@ -110,11 +140,16 @@ void PropertyLimiter::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_valid_standalone_hints", "hints"), &PropertyLimiter::set_valid_standalone_hints);
     ClassDB::bind_method(D_METHOD("get_valid_standalone_hints"), &PropertyLimiter::get_valid_standalone_hints);
 
+    ClassDB::bind_method(D_METHOD("set_valid_usages", "usages"), &PropertyLimiter::set_valid_usages);
+    ClassDB::bind_method(D_METHOD("get_valid_usages"), &PropertyLimiter::get_valid_usages);
+
     ADD_PROPERTY(PropertyInfo(Variant::INT, "valid_value_types", PROPERTY_HINT_FLAGS, get_flags_hint(get_value_type_defs())), "set_valid_value_types", "get_valid_value_types");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "valid_container_types", PROPERTY_HINT_FLAGS, get_flags_hint(get_container_type_defs())), "set_valid_container_types", "get_valid_container_types");
 
     ADD_PROPERTY(PropertyInfo(Variant::INT, "valid_string_hints", PROPERTY_HINT_FLAGS, get_flags_hint(get_string_hint_defs())), "set_valid_string_hints", "get_valid_string_hints");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "valid_standalone_hints", PROPERTY_HINT_FLAGS, get_flags_hint(get_standalone_hint_defs())), "set_valid_standalone_hints", "get_valid_standalone_hints");
+
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "valid_usages", PROPERTY_HINT_FLAGS, get_flags_hint(get_usage_defs())), "set_valid_usages", "get_valid_usages");
 }
 
 // Probably use reference here
@@ -221,11 +256,45 @@ PackedStringArray PropertyLimiter::get_standalone_hint_defs() {
         "Expression:19",
         "Color No Alpha:21",
         "Object Too Big:25",
-        "Int is Pointer:30",
+        "Int Is Pointer:30",
         "Locale ID:32",
         "Localizable String:33",
         "Hide Quaternion Edit:35",
         "Password:36",
         "Oneshot:40",
+    };
+}
+
+// See if I can use constant references here instead
+PackedStringArray PropertyLimiter::get_usage_defs() {
+    return {
+        "Storage:2",
+        "Editor:4",
+        "Internal:8",
+        "Checkable:16",
+        "Checked:32",
+        "Group:64",
+        "Category:128",
+        "Subgroup:256",
+        "Class Is Bitfield:512",
+        "No Instance State:1024",
+        "Restart If Changed:2048",
+        "Script Variable:4096",
+        "Store If Null:8192",
+        "Update All If Modified:16384",
+        "Class Is Enum:65536",
+        "Nil Is Variant:131072",
+        "Array:262144",
+        "Always Duplicate:524288",
+        "Never Duplicate:1048576",
+        "High End GFX:2097152",
+        "Node Path From Scene Root:4194304",
+        "Resource Not Persistent:8388608",
+        "Keying Increments:16777216",
+        "Editor Instantiate Object:67108864",
+        "Editor Basic Setting:134217728",
+        "Read Only:268435456",
+        "Secret:536870912",
+        "No Editor:2",
     };
 }
