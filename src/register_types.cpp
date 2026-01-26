@@ -8,6 +8,7 @@
 
 #include "property_limiter.h"
 #include "property_def.h"
+#include "property_set.h"
 
 using namespace godot;
 
@@ -18,6 +19,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
     }
     GDREGISTER_CLASS(PropertyLimiter);
     GDREGISTER_CLASS(PropertyDef);
+    GDREGISTER_CLASS(PropertySet);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
