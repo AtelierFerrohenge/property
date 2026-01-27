@@ -2,8 +2,6 @@
 
 #include "godot_cpp/classes/resource.hpp"
 
-#include <godot_cpp/core/gdvirtual.gen.inc>
-
 #include "property_limiter.h"
 
 using namespace godot;
@@ -36,17 +34,12 @@ public:
 
     Dictionary get_dictionary() const;
 
-    // Maybe could be PackedStringArrays?
-    virtual TypedArray<String> get_valid_class_names() const;
-
 protected:
     static void _bind_methods();
 
     bool _set(const StringName &p_name, const Variant &p_value);
     bool _get(const StringName &p_name, Variant &r_ret) const;
     void _get_property_list(List<PropertyInfo> *p_list) const;
-
-    GDVIRTUAL0RC(TypedArray<String>, _get_valid_class_names)
 
 private:
     Ref<PropertyLimiter> limiter;

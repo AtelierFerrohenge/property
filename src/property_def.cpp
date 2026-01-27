@@ -78,12 +78,6 @@ Dictionary PropertyDef::get_dictionary() const {
     return result;
 }
 
-TypedArray<String> PropertyDef::get_valid_class_names() const {
-    TypedArray<String> ret;
-    GDVIRTUAL_CALL(_get_valid_class_names, ret);
-    return ret;
-}
-
 void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_limiter", "limiter"), &PropertyDef::set_limiter);
     ClassDB::bind_method(D_METHOD("get_limiter"), &PropertyDef::get_limiter);
@@ -92,8 +86,6 @@ void PropertyDef::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_name"), &PropertyDef::get_name);
 
     ClassDB::bind_method(D_METHOD("get_dictionary"), &PropertyDef::get_dictionary);
-
-    GDVIRTUAL_BIND(_get_valid_class_names);
 
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "limiter", PROPERTY_HINT_RESOURCE_TYPE, "PropertyLimiter"), "set_limiter", "get_limiter");
 
@@ -157,7 +149,7 @@ void PropertyDef::_get_property_list(List<PropertyInfo> *p_list) const {
     if(limiter.is_valid()) {
         // Review if a bunch of push_backs is the right way to do this
         if(type == Variant::OBJECT) {
-            p_list->push_back(PropertyInfo(Variant::STRING_NAME, "class_name", PROPERTY_HINT_ENUM, get_enum_hint(get_valid_class_names())));
+            p_list->push_back(PropertyInfo(Variant::STRING_NAME, "class_name"));
         }
         p_list->push_back(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, limiter->get_types_enum_hint()));
         p_list->push_back(PropertyInfo(Variant::INT, "hint", PROPERTY_HINT_ENUM, limiter->get_hints_enum_hint()));
